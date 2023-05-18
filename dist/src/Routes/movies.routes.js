@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const movies_controller_1 = require("../Controllers/movies.controller");
+const movie_router = (0, express_1.Router)();
+movie_router.get("/movie_search", movies_controller_1.search_for_movie);
+movie_router.post("/add_to_top_hundred/:movie_id", movies_controller_1.add_movie_to_top100);
+movie_router.get("/view_my_top100", movies_controller_1.view_top100);
+movie_router.post("/remove_from_top100", movies_controller_1.remove_from_top100);
+movie_router.put("/clear_top100_list", movies_controller_1.clear_top100_list);
+movie_router.get("/get_movies_from_in_house_db", movies_controller_1.view_movies_on_local_db);
+exports.default = movie_router;
