@@ -1,9 +1,18 @@
-describe("dummy tests", () => {
-  test("adds 1 + 2 to equal 3", () => {
-    expect(1 + 2).toBe(3);
+import request from "supertest";
+import app from "../src/app";
+
+describe("Visit Base Url", () => {
+  it("should return status of 200", async () => {
+    const res = await request(app).get(`/`);
+
+    expect(res.status).toBe(200);
   });
 
-  test("adds 1 + 2 to equal 3", () => {
-    expect(1 + 3).toBe(4);
+  it("should return correct welcoming string", async () => {
+    let res = await request(app).get(`/`);
+
+    expect(res.body).toStrictEqual({
+      message: "Welcome to Montech-MyTop100Movies API",
+    });
   });
 });

@@ -116,7 +116,7 @@ function view_top100(req, res) {
         const user = yield pre_request_activities(req, res);
         // Declare an empty response array
         const response = [];
-        //Populate the response array.... This is a very crude approach that can be optimized
+        //Populate the response array....
         if ("movie_list" in user) {
             const movie_list = user.movie_list;
             for (let i = 0; i < movie_list.length; i++) {

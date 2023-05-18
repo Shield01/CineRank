@@ -5,9 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
-    "start:build": "tsc -w",
-    "start:development": "nodemon dist/src/index.js",
-    "local": "concurrently npm:start:*",
+    "local:build": "tsc -w",
+    "local:development": "nodemon dist/src/index.js",
+    "local": "concurrently npm:local:*",
     "start": "node dist/src/index.js"
   },
   "keywords": [],

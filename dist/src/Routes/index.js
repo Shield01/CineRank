@@ -11,4 +11,9 @@ const router = (0, express_1.Router)();
 router.use("/movies", movies_routes_1.default);
 router.use("/user", user_routes_1.default);
 router.use("/auth", auth_routes_1.default);
+router.get("/", (req, res) => {
+    return res
+        .status(200)
+        .send({ message: "Welcome to Montech-MyTop100Movies API" });
+});
 exports.default = router;
