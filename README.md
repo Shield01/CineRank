@@ -4,11 +4,13 @@ This project is my submission for the Technical Test for the role of Senior Back
 
 ## Quick Demo
 
-To quickly test the application, visit the Postman documentation using the provided link. You can use the following test credentials to log in and test the endpoints:
+To quickly test the application, visit the [Postman documentation](https://documenter.getpostman.com/view/16279504/2s93kz5jpT). You can use the following test credentials to log in and test the endpoints:
 
 - `email: test_user@test.com`
 
 - `password: test_password@test.com`
+
+You're adviced to create a personal account, for prolonged test durations.
 
 ## Local Setup
 
@@ -50,7 +52,9 @@ It was assumed that movie details remain unchanged. Therefore, the details store
 
 # Folder Structure
 
-The project's folder structure is as follows:
+# src
+
+The folder contains the project's projects source code and its structure is as follows:
 
 - ### API Integration:
 
@@ -76,6 +80,12 @@ Contains four files that follow the same naming convention as other folders. The
 
 Contains utility functions split across four files. The name prefix before `.utils.ts` indicates the type of utility function in each file.
 
-Note: The `dist` folder is a compiled version of the src folder and can be ignored for the purposes of this documentation.
+# test
+
+This folder contains all unit tests. It's structire is simillar to the `src` folder for easy navigation.
+
+# Note:
+
+The `dist` folder is a compiled version of the src folder and can be ignored for the purposes of this documentation.
 
 The `index.ts` file serves as the entry point into the application and contains all application configurations.
