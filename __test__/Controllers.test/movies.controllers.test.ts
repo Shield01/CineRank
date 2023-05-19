@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { Login } from "../../src/Controllers/auth.controller";
+
 import request from "supertest";
 import {
   search_for_movie,
@@ -9,10 +11,7 @@ import {
   clear_top100_list,
   view_movies_on_local_db,
 } from "../../src/Controllers/movies.controller";
-import {
-  searchForAMovie,
-  get_a_movie_detail,
-} from "../../src/API Integration/TMDB_API_Integration";
+import * as API from "../../src/API Integration/TMDB_API_Integration";
 import * as auth from "../../src/Utils/auth.utils";
 import {
   unauthorized,
@@ -23,6 +22,8 @@ import {
 import Movie from "../../src/Models/movie.models";
 import User from "../../src/Models/user.model";
 import app from "../../src/app";
+import { AxiosResponse } from "axios";
+import * as MovieUtil from "../../src/Utils/movie.utils";
 
 jest.mock("../../src/Models/user.model", () => ({
   User: {
@@ -32,7 +33,7 @@ jest.mock("../../src/Models/user.model", () => ({
 
 jest.mock("../../src/Models/movie.models", () => ({
   Movie: {
-    // findOne: jest.fn(),
+    findOne: jest.fn(),
   },
 }));
 
@@ -46,35 +47,47 @@ const mockResponse = (): Response => {
 
 describe("search_for_movie", () => {
   let req: Request;
-  let res;
+  let res: Response;
   let movie_name: string;
   beforeEach(() => {
-    movie_name = "Avengers";
+    req = {
+      body: {
+        email: "test@example.com",
+        password: "password",
+      },
+      query: {
+        movie_name: "Avengers",
+      },
+      headers: {
+        auth_token: "randomstring",
+      },
+    } as unknown as Request;
     res = mockResponse();
   });
 
   it("should return results from TMDB api when request is made", async () => {
-    res = await request(app).get(
-      `/movies/movie_search?movie_name=${movie_name}`
-    );
+    // Movie.findOne = jest.fn().mockResolvedValue([{ dummyMovie: "dummyMovie" }]);
+    jest
+      .spyOn(API, "searchForAMovie")
+      .mockResolvedValue(res as unknown as AxiosResponse);
 
-    expect(res.status).toBe(StatusCodes.OK);
-    expect(res.body.length).toBeGreaterThan(0);
+    await search_for_movie(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(StatusCodes.OK);
   }, 60000);
 
-  // Doesn't work yet.
-  //   it("should return internal server error response when an error occurs", async () => {
-  //     res = await request(`${base_url}`).get(
-  //       `/movies/movie_search?movie_name=${undefined}`
-  //     );
+  it("should return internal server error response when an error occurs", async () => {
+    jest.spyOn(API, "searchForAMovie").mockRejectedValue(new Error("An error"));
 
-  //     expect(res.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
+    await search_for_movie(req, res);
 
-  //     expect(res.body).toBe({
-  //       httpStatus: "Internal server error",
-  //       message: "An error occured while searching for movie",
-  //     });
-  //   });
+    expect(res.status).toHaveBeenCalledWith(StatusCodes.INTERNAL_SERVER_ERROR);
+
+    expect(res.json).toHaveBeenCalledWith({
+      httpStatus: "Internal server error",
+      message: "An error occured while searching for movie",
+    });
+  });
 });
 
 describe("add_movie_to_top100", () => {
@@ -84,17 +97,16 @@ describe("add_movie_to_top100", () => {
     req = {
       body: {
         rank: 10,
+        email: "test@example.com",
+        password: "password",
       },
       headers: {
-        auth_token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ2NDYxMTBjNjdhMzJmNDI3NjQ0ZjQwIiwiZW1haWwiOiJ0ZXN0X3VzZXJAdGVzdC5jb20iLCJpYXQiOjE2ODQzMDAwNTksImV4cCI6MTY4NDMwMDY1OX0.UyGxGC8VZsnJcG37CaXPrsafTH2rtlfDxfKFyzA47_I",
+        auth_token: "random_text",
       },
       params: {
         movie_id: "123456",
       },
     } as unknown as Request;
-    //   base_url = "http://localhost:3000";
-    //   movie_name = "Avengers";
     res = mockResponse();
   });
 
@@ -113,8 +125,7 @@ describe("add_movie_to_top100", () => {
     jest.spyOn(auth, "decode_token").mockResolvedValue({
       valid: false,
       expired: true,
-      decoded_token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ2NDYxMTBjNjdhMzJmNDI3NjQ0ZjQwIiwiZW1haWwiOiJ0ZXN0X3VzZXJAdGVzdC5jb20iLCJpYXQiOjE2ODQzMDAwNTksImV4cCI6MTY4NDMwMDY1OX0.UyGxGC8VZsnJcG37CaXPrsafTH2rtlfDxfKFyzA47_I",
+      decoded_token: "random_text",
     } as unknown as never);
 
     await add_movie_to_top100(req, res);
@@ -132,17 +143,27 @@ describe("add_movie_to_top100", () => {
   //     movie_list: "movie_object",
   //   };
 
-  //   jest.spyOn(auth, "decode_token").mockResolvedValue({
-  //     valid: true,
-  //     expired: false,
-  //     decoded_token: { user_id: "vuidbo" },
-  //   } as unknown as never);
+  //   const mockUser = {
+  //     _id: "userId",
+  //     email: "test@example.com",
+  //     password: "hashedPassword",
+  //   };
+
+  //   User.findOne = jest.fn().mockResolvedValue(mockUser);
+  //   jest.spyOn(auth, "verifyPassword").mockResolvedValue(true);
+  //   jest
+  //     .spyOn(auth, "create_jwt_token")
+  //     .mockResolvedValue("create_jwt_token" as never);
+
+  //   await Login(req, res);
+
+  //   jest.spyOn(auth, "decode_token").mockResolvedValue("decode_token" as never);
 
   //   User.findOneAndUpdate = jest.fn().mockResolvedValue(dummyData);
 
   //   await add_movie_to_top100(req, res);
 
-  //   expect(res.status).toHaveBeenCalledWith(StatusCodes.UNAUTHORIZED);
+  //   // expect(res.status).toHaveBeenCalledWith(StatusCodes.OK);
   //   expect(res.json).toHaveBeenCalledWith({
   //     httpStatus: "Ok",
   //     message: "Movie added to the Top100 list",
@@ -152,6 +173,9 @@ describe("add_movie_to_top100", () => {
   // Does not work yet.
   // it("should return INTERNAL_SERVER_ERROR if an error occurs", async () => {
   //   Movie.findOne = jest.fn().mockRejectedValue(new Error("Database error"));
+  //   jest
+  //     .spyOn(auth, "decode_token")
+  //     .mockResolvedValue(req.headers.auth_token as unknown as never);
 
   //   await add_movie_to_top100(req, res);
 
@@ -163,3 +187,39 @@ describe("add_movie_to_top100", () => {
   //   });
   // });
 });
+
+// describe("view_top100", () => {
+//   let req: Request;
+//   let res: Response;
+
+//   // let movie_name: string;
+//   beforeEach(() => {
+//     req = {
+//       query: {
+//         movie_name: "Avengers",
+//       },
+//       headers: {
+//         auth_token: "randomstring",
+//       },
+//     } as unknown as Request;
+//     res = mockResponse();
+//   });
+
+//   it("should return an array of movies", async () => {
+//     const dummyData = { movie_name: "movie_name" };
+//     User.findOne = jest.fn().mockResolvedValue({ movie_list: [] });
+//     await view_top100(req, res);
+//     jest
+//       .spyOn(MovieUtil, "get_movie_local_details")
+//       .mockResolvedValue(dummyData as any);
+
+//     expect(res.status).toHaveBeenCalledWith(StatusCodes.OK);
+//     expect(typeof res.json).toBe("object");
+//   });
+// });
+
+describe("remove_from_top100", () => {});
+
+describe("clear_top100_list", () => {});
+
+describe("view_movies_on_local_db", () => {});
