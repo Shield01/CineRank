@@ -62,3 +62,7 @@ Postman Documentation : https://documenter.getpostman.com/view/16279504/2s93kz5j
 ```
 
 # License
+
+MIT License
+
+Copyright (c) 2023 Tijani Hussein
