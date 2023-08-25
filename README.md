@@ -18,8 +18,6 @@ In a world overflowing with captivating films, it can be challenging for movie e
 
 # API Documentation
 
-Swagger Documentation : https://mytopmoviesapi.herokuapp.com/docs
-
 Postman Documentation : https://documenter.getpostman.com/view/16279504/2s93kz5jpT
 
 # File Structure
