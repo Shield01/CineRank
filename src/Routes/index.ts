@@ -10,9 +10,7 @@ router.use("/user", user_router);
 router.use("/auth", auth_router);
 
 router.get("/", (req: Request, res: Response) => {
-  return res
-    .status(200)
-    .send({ message: "Welcome to Montech-MyTop100Movies API" });
+  return res.status(200).send({ message: "Welcome to the CineRank app" });
 });
 
 export default router;
