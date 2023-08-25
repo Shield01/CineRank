@@ -12,7 +12,7 @@ describe("Visit Base Url", () => {
     let res = await request(app).get(`/`);
 
     expect(res.body).toStrictEqual({
-      message: "Welcome to Montech-MyTop100Movies API",
+      message: "Welcome to the CineRank app",
     });
   });
 });

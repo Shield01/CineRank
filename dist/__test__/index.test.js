@@ -22,7 +22,7 @@ describe("Visit Base Url", () => {
     it("should return correct welcoming string", () => __awaiter(void 0, void 0, void 0, function* () {
         let res = yield (0, supertest_1.default)(app_1.default).get(`/`);
         expect(res.body).toStrictEqual({
-            message: "Welcome to Montech-MyTop100Movies API",
+            message: "Welcome to the CineRank app",
         });
     }));
 });

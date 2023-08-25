@@ -1,91 +1,64 @@
-# Technical Test - Senior Backend Developer Role
+# <h1 align="center"> CineRank </h1>
 
-This project is my submission for the Technical Test for the role of Senior Backend Developer at Montech Studios INC.
+In a world overflowing with captivating films, it can be challenging for movie enthusiasts to keep track of their all-time favorites.CineRank is a groundbreaking solution designed to empower individuals in managing and curating their personal list of Top 100 favorite movies. This documentation delves into the key features and benefits of CineRank, showcasing how it empowers individuals and also the steps to follow in setting up the backend application.
 
-## Quick Demo
+# Feature
 
-To quickly test the application, visit the [Postman documentation](https://documenter.getpostman.com/view/16279504/2s93kz5jpT). You can use the following test credentials to log in and test the endpoints:
+- Search for a Movie
 
-- `email: test_user@test.com`
+- Get detailed information about a movie
 
-- `password: test_password@test.com`
+- Add a movie to your top 100 movies list.
 
-You're adviced to create a personal account, for prolonged test durations.
+- View your top 100 movies list.
 
-## Local Setup
+- Delete a movie from your top 100 movies list.
 
-To set up the project locally, follow these steps:
+- Clear Your Top 100 list
 
-1.  Clone the project repository.
+# API Documentation
 
-2.  Run the command `npm install` to install all project dependencies.
+Swagger Documentation : https://mytopmoviesapi.herokuapp.com/docs
 
-3.  Create a `.env` file in the root directory and populate the following variables:
+Postman Documentation : https://documenter.getpostman.com/view/16279504/2s93kz5jpT
+
+# File Structure
+
+```bash
+📦src
+ ┣ 📂API Integration
+ ┃ ┗ 📜TMDB_API_Integration.ts
+ ┣ 📂Controllers
+ ┃ ┣ 📜auth.controller.ts
+ ┃ ┣ 📜movies.controller.ts
+ ┃ ┗ 📜user.controller.ts
+ ┣ 📂db
+ ┃ ┗ 📜connectDb.ts
+ ┣ 📂Models
+ ┃ ┣ 📜movie.models.ts
+ ┃ ┗ 📜user.model.ts
+ ┣ 📂Routes
+ ┃ ┣ 📜auth.routes.ts
+ ┃ ┣ 📜index.ts
+ ┃ ┣ 📜movies.routes.ts
+ ┃ ┗ 📜user.routes.ts
+ ┣ 📂Utils
+ ┃ ┣ 📜auth.utils.ts
+ ┃ ┣ 📜http_responses.utils.ts
+ ┃ ┣ 📜movie.utils.ts
+ ┃ ┗ 📜types.utils.ts
+ ┣ 📜app.ts
+ ┗ 📜index.ts
+ ┃
+ ┣ _test_
+ ┣ dist
+ ┣ .gitignore
+ ┣ README.md
+ ┣ jest.config.js
+ ┣ package-lock.json
+ ┣ package.json
+ ┗ tsconfig.json
 
 ```
-makefile
-Copy code
-SALT_FACTOR =
-TOKEN_KEY =
-TOKEN_VALIDITY_DURATION =
-TMDB_BASE_URL = https://api.themoviedb.org/3/
-TMDB_AUTH_TOKEN =
-DB_URI =
-```
 
-Ensure you assign valid values to these variables.
-
-4. Run `npm run local` to start the local server.
-
-5. The application will now be running on your local server and listening for requests on port 3000.
-
-Assumptions
-During development, the following assumptions were made:
-
-- ## Cost of TMDB API Requests:
-
-It was assumed that Montech Studios incurs a cost per API request to TMDB's API. To mitigate costs, the application stores a copy of the response from TMDB's API when a user adds a movie to their top 100 list. Additionally, an endpoint was implemented to retrieve movie details from the in-house database, reducing the need for API requests unless a user initiates a search or the movie details are not available in the in-house database.
-
-- ## Stability of Movie Details:
-
-It was assumed that movie details remain unchanged. Therefore, the details stored in Montech Studios' in-house database are considered valid and reliable.
-
-# Folder Structure
-
-# src
-
-The folder contains the project's projects source code and its structure is as follows:
-
-- ### API Integration:
-
-Contains `TMDB_API_Integration.ts`, which handles the logic for integrating with the TMDB API.
-
-- ### Controllers:
-
-Contains three controller files that handle specific logic. Each file's name prefix indicates the type of logic it handles. For example, `auth.controller.ts` handles authentication-related logic.
-
-- ### db:
-
-Contains `connectDb.ts`, which handles the application's database connection.
-
-- ### Models:
-
-Contains two files that define the database models and application interfaces. The name prefix before `.model.ts` specifies the type of model defined in the file. For example, `movie.model.ts` defines the movie database model and the movie application interface.
-
-- ### Routes:
-
-Contains four files that follow the same naming convention as other folders. The `index.ts` file acts as middleware to consolidate all routes into a single location.
-
-- ### Utils:
-
-Contains utility functions split across four files. The name prefix before `.utils.ts` indicates the type of utility function in each file.
-
-# test
-
-This folder contains all unit tests. It's structire is simillar to the `src` folder for easy navigation.
-
-# Note:
-
-The `dist` folder is a compiled version of the src folder and can be ignored for the purposes of this documentation.
-
-The `index.ts` file serves as the entry point into the application and contains all application configurations.
+# License
